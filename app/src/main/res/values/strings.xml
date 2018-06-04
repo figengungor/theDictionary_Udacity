@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">The Dictionary</string>
+    <string name="search_hint">Type a word</string>
+    <string name="search_btn_text">Search</string>
+    <string name="empty_search_text">Please, type something!</string>
+    <string name="history">History</string>
+    <string name="delete_all">Delete All</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="all_history_will_be_deleted">All history will be deleted!</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="no_history_record">You don\'t have any history record.</string>
+    <string name="appwidget_text">Search History</string>
+    <string name="add_widget">Add widget</string>
+    <string name="empty_result">No entry available for this search</string>
+    <string name="server_error">Server error</string>
+</resources>
