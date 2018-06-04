@@ -37,7 +37,6 @@ configurations.all {
 ext {
     supportLibraryVersion = '27.1.1'
     constraintLayoutVersion = '1.1.0'
-    picassoVersion = '2.5.2'
     retrofitVersion = '2.3.0'
     okHttp3Version = '3.9.1'
     archComponentsVersion = '1.1.1'
