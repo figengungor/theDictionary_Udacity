@@ -1,6 +1,8 @@
 package com.figengungor.thedictionary.ui.home;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 
 import com.figengungor.thedictionary.R;
 import com.figengungor.thedictionary.data.model.Entry;
+import com.figengungor.thedictionary.data.model.Example;
 import com.figengungor.thedictionary.data.model.LexicalEntry;
 import com.figengungor.thedictionary.data.model.Sense;
 
@@ -60,13 +63,36 @@ public class EntryAdapter extends
             lexicalCategoryTv.setText(item.getLexicalCategory());
             List<Entry> entries = item.getEntries();
             for (Entry entry : entries) {
-                for (Sense sense : entry.getSenses()) {
+                List<Sense> senses = entry.getSenses();
+                for (int s = 0; s < senses.size(); s++) {
+                    definitionTv.append(Html.fromHtml("<b>" + (s + 1) + "<b>&nbsp"));
+                    Sense sense = senses.get(s);
                     List<String> definitions = sense.getDefinitions();
                     if (definitions != null) {
                         for (int i = 0; i < definitions.size(); i++)
-                            definitionTv.append("* " + sense.getDefinitions().get(i) + "\n");
+                            definitionTv.append(definitions.get(i) + "\n");
                     }
 
+                    List<String> crossReferenceMarkers = sense.getCrossReferenceMarkers();
+                    if (crossReferenceMarkers != null) {
+
+                        if(sense.getDomains()!=null && sense.getDomains().size()>0) {
+                            String domains = TextUtils.join(",", sense.getDomains());
+                            definitionTv.append(domains + ",");
+                        }
+                        for (int i = 0; i < crossReferenceMarkers.size(); i++) {
+                            definitionTv.append(crossReferenceMarkers.get(i)+"\n");
+                        }
+                    }
+
+                    List<Example> examples = sense.getExamples();
+                    if (examples != null) {
+                        for (int i = 0; i < examples.size(); i++) {
+                            definitionTv.append(Html.fromHtml("<i>" + examples.get(i).getText() + "</i>" + "<br>"));
+                        }
+                    }
+
+                    definitionTv.append("\n");
                 }
             }
         }
