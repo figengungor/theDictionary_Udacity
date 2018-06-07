@@ -29,6 +29,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/definitionTv"
+        android:textColor="@color/colorSecondaryText"
         app:layout_constraintTop_toBottomOf="@+id/lexicalCategoryTv"
         app:layout_constraintStart_toStartOf="parent"
         tools:text = "Bla bla bla bla bla bla bla bla bla"

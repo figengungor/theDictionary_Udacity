@@ -1,8 +1,12 @@
 package com.figengungor.thedictionary.ui.home;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,12 +69,16 @@ public class EntryAdapter extends
             for (Entry entry : entries) {
                 List<Sense> senses = entry.getSenses();
                 for (int s = 0; s < senses.size(); s++) {
-                    definitionTv.append(Html.fromHtml("<b>" + (s + 1) + "<b>&nbsp"));
+                    StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+                    SpannableStringBuilder sb_number = new SpannableStringBuilder(s+1+" ");
+                    sb_number.setSpan(bss, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    definitionTv.append(sb_number);
                     Sense sense = senses.get(s);
                     List<String> definitions = sense.getDefinitions();
                     if (definitions != null) {
-                        for (int i = 0; i < definitions.size(); i++)
-                            definitionTv.append(definitions.get(i) + "\n");
+                        for (int i = 0; i < definitions.size(); i++) {
+                            definitionTv.append(definitions.get(i) + "\n\n");
+                        }
                     }
 
                     List<String> crossReferenceMarkers = sense.getCrossReferenceMarkers();
@@ -81,14 +89,20 @@ public class EntryAdapter extends
                             definitionTv.append(domains + ",");
                         }
                         for (int i = 0; i < crossReferenceMarkers.size(); i++) {
-                            definitionTv.append(crossReferenceMarkers.get(i)+"\n");
+                            definitionTv.append(crossReferenceMarkers.get(i)+"\n\n");
                         }
                     }
 
                     List<Example> examples = sense.getExamples();
                     if (examples != null) {
                         for (int i = 0; i < examples.size(); i++) {
-                            definitionTv.append(Html.fromHtml("<i>" + examples.get(i).getText() + "</i>" + "<br>"));
+                            ForegroundColorSpan fcs = new ForegroundColorSpan(ContextCompat.getColor(itemView.getContext(), R.color.colorPrimary));
+                            StyleSpan iss = new StyleSpan(android.graphics.Typeface.ITALIC);
+                            String example = "\""+examples.get(i).getText()+"\"\n\n";
+                            SpannableStringBuilder sb_example = new SpannableStringBuilder(example);
+                            sb_example.setSpan(iss, 0, example.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            sb_example.setSpan(fcs, 0, example.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            definitionTv.append(sb_example);
                         }
                     }
 
