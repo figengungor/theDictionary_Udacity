@@ -14,7 +14,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.home.HomeActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateUnchanged|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
