@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -42,8 +43,10 @@ public class HomeActivity extends AppCompatActivity {
     private static final String TAG = HomeActivity.class.getSimpleName();
     public static final String EXTRA_SEARCH_HISTORY_ENTRY = "history_entry";
     private static final int REQUEST_CODE_HISTORY = 1;
+    private static final String KEY_RECYCLERVIEW_STATE = "recyclerview_state";
     private FirebaseAnalytics firebaseAnalytics;
-    HomeViewModel viewModel;
+    private HomeViewModel viewModel;
+    private Parcelable recyclerViewState;
 
     @BindView(R.id.searchEt)
     EditText searchEt;
@@ -80,10 +83,15 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        init();
+        init(savedInstanceState);
     }
 
-    private void init() {
+    private void init(Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            recyclerViewState = savedInstanceState.getParcelable(KEY_RECYCLERVIEW_STATE);
+        }
+
         viewModel = ViewModelProviders.of(this,
                 new HomeViewModelFactory(getApplication(), DataManager.getInstance(getApplication())))
                 .get(HomeViewModel.class);
@@ -141,6 +149,10 @@ public class HomeActivity extends AppCompatActivity {
         messageLayout.setVisibility(View.GONE);
         EntryAdapter adapter = new EntryAdapter(lexicalEntries);
         entriesRv.setAdapter(adapter);
+        if (recyclerViewState != null) {
+            entriesRv.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+            recyclerViewState = null;
+        }
     }
 
     private void showLoadingIndicator(Boolean isLoading) {
@@ -184,6 +196,13 @@ public class HomeActivity extends AppCompatActivity {
             searchEt.setText(searchEntry);
             search();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Parcelable state = entriesRv.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(KEY_RECYCLERVIEW_STATE, state);
     }
 
     /**

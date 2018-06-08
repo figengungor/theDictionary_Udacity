@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -32,9 +33,13 @@ import butterknife.ButterKnife;
 
 public class HistoryActivity extends AppCompatActivity {
 
-    HistoryViewModel viewModel;
-    RecyclerTouchListener onTouchListener;
-    HistoryAdapter historyAdapter;
+    private HistoryViewModel viewModel;
+    private RecyclerTouchListener onTouchListener;
+    private HistoryAdapter historyAdapter;
+    private Parcelable recyclerViewState;
+    private static final String KEY_RECYCLERVIEW_STATE = "recyclerview_state";
+
+
     @BindView(R.id.historyRv)
     RecyclerView historyRv;
     @BindView(R.id.messageLayout)
@@ -42,15 +47,21 @@ public class HistoryActivity extends AppCompatActivity {
     @BindView(R.id.messageTv)
     TextView messageTv;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         ButterKnife.bind(this);
-        init();
+        init(savedInstanceState);
     }
 
-    private void init(){
+    private void init(Bundle savedInstanceState){
+
+        if (savedInstanceState != null) {
+            recyclerViewState = savedInstanceState.getParcelable(KEY_RECYCLERVIEW_STATE);
+        }
+
         viewModel = ViewModelProviders.of(this,
                 new HistoryViewModelFactory(getApplication(), AppDatabase.getInstance(getApplication())))
                 .get(HistoryViewModel.class);
@@ -110,6 +121,10 @@ public class HistoryActivity extends AppCompatActivity {
         historyRv.setVisibility(View.VISIBLE);
         historyAdapter = new HistoryAdapter(searchHistoryEntries);
         historyRv.setAdapter(historyAdapter);
+        if (recyclerViewState != null) {
+            historyRv.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+            recyclerViewState = null;
+        }
     }
 
     private void displayEmptyLayout() {
@@ -166,6 +181,13 @@ public class HistoryActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Parcelable state = historyRv.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(KEY_RECYCLERVIEW_STATE, state);
     }
 
     @Override
