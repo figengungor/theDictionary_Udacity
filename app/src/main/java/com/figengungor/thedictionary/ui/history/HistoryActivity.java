@@ -1,13 +1,10 @@
 package com.figengungor.thedictionary.ui.history;
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -71,14 +68,11 @@ public class HistoryActivity extends AppCompatActivity {
                 new HistoryViewModelFactory(getApplication(), AppDatabase.getInstance(getApplication())))
                 .get(HistoryViewModel.class);
 
-        viewModel.getHistoryList().observe(this, new Observer<List<SearchHistoryEntry>>() {
-            @Override
-            public void onChanged(@Nullable List<SearchHistoryEntry> searchHistoryEntries) {
-                if (searchHistoryEntries.size() == 0) {
-                    displayEmptyLayout();
-                } else {
-                    displayHistoryList(searchHistoryEntries);
-                }
+        viewModel.getHistoryList().observe(this, searchHistoryEntries -> {
+            if (searchHistoryEntries.size() == 0) {
+                displayEmptyLayout();
+            } else {
+                displayHistoryList(searchHistoryEntries);
             }
         });
 
@@ -92,7 +86,7 @@ public class HistoryActivity extends AppCompatActivity {
         } else {
             showDelete = false;
         }
-        historyAdapter = new HistoryAdapter(new ArrayList<SearchHistoryEntry>(), showDelete);
+        historyAdapter = new HistoryAdapter(new ArrayList<>(), showDelete);
         LinearLayoutManager layoutManager = new LinearLayoutManager(HistoryActivity.this);
         historyRv.setLayoutManager(layoutManager);
         onTouchListener = new RecyclerTouchListener(this, historyRv);
@@ -114,18 +108,10 @@ public class HistoryActivity extends AppCompatActivity {
                         }
                     }
                 })
-                .setLongClickable(true, new RecyclerTouchListener.OnRowLongClickListener() {
-                    @Override
-                    public void onRowLongClicked(int position) {
-                    }
-                })
                 .setSwipeOptionViews(R.id.deleteRL)
-                .setSwipeable(R.id.rowFG, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-                    @Override
-                    public void onSwipeOptionClicked(int viewID, int position) {
-                        if (viewID == R.id.deleteRL) {
-                            viewModel.deleteSearchHistoryEntry(historyAdapter.getItem(position));
-                        }
+                .setSwipeable(R.id.rowFG, R.id.rowBG, (viewID, position) -> {
+                    if (viewID == R.id.deleteRL) {
+                        viewModel.deleteSearchHistoryEntry(historyAdapter.getItem(position));
                     }
                 });
     }
@@ -180,18 +166,12 @@ public class HistoryActivity extends AppCompatActivity {
         builder.setTitle(getString(R.string.are_you_sure));
         builder.setMessage(getString(R.string.all_history_will_be_deleted));
 
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                viewModel.deleteAllHistory();
-                dialog.dismiss();
-            }
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            viewModel.deleteAllHistory();
+            dialog.dismiss();
         });
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
 
         AlertDialog dialog = builder.create();
         dialog.show();

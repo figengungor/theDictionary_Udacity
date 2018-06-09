@@ -31,23 +31,15 @@ public class SearchHistoryListRemoteViewsFactory implements RemoteViewsService.R
 
     @Override
     public void onCreate() {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                searchHistoryEntries = appDatabase.searchHistoryDao().getSearchHistoryEntries();
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() ->
+                searchHistoryEntries = appDatabase.searchHistoryDao().getSearchHistoryEntries());
 
     }
 
     @Override
     public void onDataSetChanged() {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                searchHistoryEntries = appDatabase.searchHistoryDao().getSearchHistoryEntries();
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() ->
+                searchHistoryEntries = appDatabase.searchHistoryDao().getSearchHistoryEntries());
     }
 
     @Override

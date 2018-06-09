@@ -1,11 +1,9 @@
 package com.figengungor.thedictionary.ui.home;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -96,30 +94,21 @@ public class HomeActivity extends AppCompatActivity {
                 new HomeViewModelFactory(getApplication(), DataManager.getInstance(getApplication())))
                 .get(HomeViewModel.class);
 
-        viewModel.getLexicalEntries().observe(this, new Observer<List<LexicalEntry>>() {
-            @Override
-            public void onChanged(@Nullable List<LexicalEntry> lexicalEntries) {
-                if (lexicalEntries != null) showEntries(lexicalEntries);
-                else entriesRv.setVisibility(View.GONE);
-            }
+        viewModel.getLexicalEntries().observe(this, lexicalEntries -> {
+            if (lexicalEntries != null) showEntries(lexicalEntries);
+            else entriesRv.setVisibility(View.GONE);
         });
 
-        viewModel.getIsLoading().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoading) {
-                Log.d(TAG, "onChanged: getIsLoading -> " + isLoading);
-                showLoadingIndicator(isLoading);
-            }
+        viewModel.getIsLoading().observe(this, isLoading -> {
+            Log.d(TAG, "onChanged: getIsLoading -> " + isLoading);
+            showLoadingIndicator(isLoading);
         });
 
-        viewModel.getError().observe(this, new Observer<Throwable>() {
-            @Override
-            public void onChanged(@Nullable Throwable throwable) {
-                Log.d(TAG, "onChanged: getError -> " + throwable);
-                if (throwable != null) showError(throwable);
-                else messageLayout.setVisibility(View.GONE);
+        viewModel.getError().observe(this, throwable -> {
+            Log.d(TAG, "onChanged: getError -> " + throwable);
+            if (throwable != null) showError(throwable);
+            else messageLayout.setVisibility(View.GONE);
 
-            }
         });
 
         // Obtain the FirebaseAnalytics instance.
