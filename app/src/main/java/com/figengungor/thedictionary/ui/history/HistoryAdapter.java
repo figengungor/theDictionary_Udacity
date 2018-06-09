@@ -4,10 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
 import com.figengungor.thedictionary.R;
 import com.figengungor.thedictionary.data.local.SearchHistoryEntry;
+
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -18,9 +22,11 @@ public class HistoryAdapter extends
         RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
     private List<SearchHistoryEntry> items;
+    private boolean showDelete;
 
-    public HistoryAdapter(List<SearchHistoryEntry> items) {
+    public HistoryAdapter(List<SearchHistoryEntry> items, boolean showDelete) {
         this.items = items;
+        this.showDelete = showDelete;
     }
 
     @Override
@@ -32,6 +38,11 @@ public class HistoryAdapter extends
     public void onBindViewHolder(HistoryViewHolder holder, int position) {
         final SearchHistoryEntry item = items.get(position);
         holder.historyTv.setText(item.getEntry());
+        if(showDelete){
+            holder.deleteBtn.setVisibility(View.VISIBLE);
+        } else {
+            holder.deleteBtn.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -43,6 +54,8 @@ public class HistoryAdapter extends
 
         @BindView(R.id.historyTv)
         TextView historyTv;
+        @BindView(R.id.deleteBtn)
+        ImageButton deleteBtn;
 
         public HistoryViewHolder(View itemView) {
             super(itemView);

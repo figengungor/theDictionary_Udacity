@@ -5,5 +5,6 @@
         android:id="@+id/item_history"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_history_black_24dp"
-        android:title="@string/history" />
+        android:title="@string/history"
+        android:contentDescription="@string/content_description_item_history"/>
 </menu>

@@ -15,4 +15,6 @@
     <string name="add_widget">Add widget</string>
     <string name="empty_result">No entry available for this search</string>
     <string name="server_error">Server error</string>
+    <string name="content_description_item_history">History Button</string>
+    <string name="content_description_item_delete_all">Delete All Button</string>
 </resources>

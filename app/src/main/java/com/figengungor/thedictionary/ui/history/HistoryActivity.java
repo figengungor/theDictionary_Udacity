@@ -24,6 +24,7 @@ import com.figengungor.thedictionary.data.local.AppDatabase;
 import com.figengungor.thedictionary.data.local.SearchHistoryEntry;
 import com.figengungor.thedictionary.ui.home.HomeActivity;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
+import com.novoda.accessibility.AccessibilityServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,8 @@ public class HistoryActivity extends AppCompatActivity {
     private HistoryAdapter historyAdapter;
     private Parcelable recyclerViewState;
     private static final String KEY_RECYCLERVIEW_STATE = "recyclerview_state";
+    private AccessibilityServices services;
+    private boolean showDelete = false;
 
 
     @BindView(R.id.historyRv)
@@ -56,7 +59,9 @@ public class HistoryActivity extends AppCompatActivity {
         init(savedInstanceState);
     }
 
-    private void init(Bundle savedInstanceState){
+    private void init(Bundle savedInstanceState) {
+
+        services = AccessibilityServices.newInstance(this);
 
         if (savedInstanceState != null) {
             recyclerViewState = savedInstanceState.getParcelable(KEY_RECYCLERVIEW_STATE);
@@ -82,22 +87,31 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void setupUI() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        historyAdapter = new HistoryAdapter(new ArrayList<SearchHistoryEntry>());
+        if (services.isSpokenFeedbackEnabled()) {
+            showDelete = true;
+        } else {
+            showDelete = false;
+        }
+        historyAdapter = new HistoryAdapter(new ArrayList<SearchHistoryEntry>(), showDelete);
         LinearLayoutManager layoutManager = new LinearLayoutManager(HistoryActivity.this);
         historyRv.setLayoutManager(layoutManager);
         onTouchListener = new RecyclerTouchListener(this, historyRv);
         onTouchListener
+                .setIndependentViews(R.id.deleteBtn)
                 .setClickable(new RecyclerTouchListener.OnRowClickListener() {
                     @Override
                     public void onRowClicked(int position) {
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra(HomeActivity.EXTRA_SEARCH_HISTORY_ENTRY, historyAdapter.getItem(position).getEntry());
-                        setResult(Activity.RESULT_OK,returnIntent);
+                        setResult(Activity.RESULT_OK, returnIntent);
                         onBackPressed();
                     }
 
                     @Override
                     public void onIndependentViewClicked(int independentViewID, int position) {
+                        if (independentViewID == R.id.deleteBtn) {
+                            viewModel.deleteSearchHistoryEntry(historyAdapter.getItem(position));
+                        }
                     }
                 })
                 .setLongClickable(true, new RecyclerTouchListener.OnRowLongClickListener() {
@@ -105,11 +119,11 @@ public class HistoryActivity extends AppCompatActivity {
                     public void onRowLongClicked(int position) {
                     }
                 })
-                .setSwipeOptionViews(R.id.add)
+                .setSwipeOptionViews(R.id.deleteRL)
                 .setSwipeable(R.id.rowFG, R.id.rowBG, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                     @Override
                     public void onSwipeOptionClicked(int viewID, int position) {
-                        if (viewID == R.id.add) {
+                        if (viewID == R.id.deleteRL) {
                             viewModel.deleteSearchHistoryEntry(historyAdapter.getItem(position));
                         }
                     }
@@ -119,7 +133,7 @@ public class HistoryActivity extends AppCompatActivity {
     private void displayHistoryList(List<SearchHistoryEntry> searchHistoryEntries) {
         messageLayout.setVisibility(View.GONE);
         historyRv.setVisibility(View.VISIBLE);
-        historyAdapter = new HistoryAdapter(searchHistoryEntries);
+        historyAdapter = new HistoryAdapter(searchHistoryEntries, showDelete);
         historyRv.setAdapter(historyAdapter);
         if (recyclerViewState != null) {
             historyRv.getLayoutManager().onRestoreInstanceState(recyclerViewState);
