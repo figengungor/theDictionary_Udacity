@@ -7,27 +7,27 @@ import java.util.List;
 
 public class Entry {
 
-@SerializedName("homographNumber")
-@Expose
-private String homographNumber;
-@SerializedName("senses")
-@Expose
-private List<Sense> senses = null;
+    @SerializedName("homographNumber")
+    @Expose
+    private String homographNumber;
+    @SerializedName("senses")
+    @Expose
+    private List<Sense> senses = null;
 
-public String getHomographNumber() {
-return homographNumber;
-}
+    public String getHomographNumber() {
+        return homographNumber;
+    }
 
-public void setHomographNumber(String homographNumber) {
-this.homographNumber = homographNumber;
-}
+    public void setHomographNumber(String homographNumber) {
+        this.homographNumber = homographNumber;
+    }
 
-public List<Sense> getSenses() {
-return senses;
-}
+    public List<Sense> getSenses() {
+        return senses;
+    }
 
-public void setSenses(List<Sense> senses) {
-this.senses = senses;
-}
+    public void setSenses(List<Sense> senses) {
+        this.senses = senses;
+    }
 
 }

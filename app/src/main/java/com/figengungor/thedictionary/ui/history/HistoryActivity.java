@@ -81,11 +81,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void setupUI() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (services.isSpokenFeedbackEnabled()) {
-            showDelete = true;
-        } else {
-            showDelete = false;
-        }
+        showDelete = services.isSpokenFeedbackEnabled();
         historyAdapter = new HistoryAdapter(new ArrayList<>(), showDelete);
         LinearLayoutManager layoutManager = new LinearLayoutManager(HistoryActivity.this);
         historyRv.setLayoutManager(layoutManager);

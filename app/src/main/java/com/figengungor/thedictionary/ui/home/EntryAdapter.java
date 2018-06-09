@@ -30,7 +30,6 @@ public class EntryAdapter extends
         RecyclerView.Adapter<EntryAdapter.EntryViewHolder> {
 
     private List<LexicalEntry> items;
-    private ItemListener itemListener;
 
     public EntryAdapter(List<LexicalEntry> items) {
         this.items = items;
@@ -111,13 +110,4 @@ public class EntryAdapter extends
             }
         }
     }
-
-    public interface ItemListener {
-        void onItemClicked(LexicalEntry item);
-    }
-
-    public void setItemListener(ItemListener itemListener) {
-        this.itemListener = itemListener;
-    }
-
 }
