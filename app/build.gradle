@@ -12,7 +12,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.figengungor.thedictionary"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -27,6 +27,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -94,6 +99,8 @@ dependencies {
 
     //Analytics
     implementation "com.google.firebase:firebase-core:$firebaseAnalyticsVersion"
+
+    implementation 'com.novoda:accessibilitools:1.6.0'
 
     //Test
     testImplementation 'junit:junit:4.12'
