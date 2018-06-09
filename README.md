@@ -25,6 +25,17 @@ You need to set your appid and app key in your `gradle.properties` file as follo
 You also need create a Firebase Project and download google-services.json
 to use Firebase Admob and Analytics
 
+### Screenshots
+
+Search 1             |  Search 2 |  Search 3
+:-------------------------:|:-------------------------:|:-------------------------:
+![](art/nexus5x_1.png)  |  ![](art/nexus5x_2.png) |  ![](art/nexus5x_3.png)
+
+History           |  App Widget
+:-------------------------:|:-------------------------:
+![](art/nexus5x_history.png)  |  ![](art/app_widget.png)
+
+
 ### Credits
 
 #### Libraries
